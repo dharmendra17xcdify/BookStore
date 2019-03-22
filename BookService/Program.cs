@@ -1,4 +1,9 @@
-﻿using Microsoft.ServiceFabric.Services.Runtime;
+﻿using BookService.Models;
+using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.ServiceFabric.Services.Runtime;
 using System;
 using System.Diagnostics;
 using System.Threading;
@@ -11,10 +16,15 @@ namespace BookService
         /// <summary>
         /// This is the entry point of the service host process.
         /// </summary>
-        private static void Main()
+        private static void Main(string[] args)
         {
             try
             {
+                var host = CreateWebHostBuilder(args).Build();
+
+                MigrateDatabase(host);
+
+                host.Run();
                 // The ServiceManifest.XML file defines one or more service type names.
                 // Registering a service maps a service type name to a .NET type.
                 // When Service Fabric creates an instance of this service type,
@@ -34,5 +44,27 @@ namespace BookService
                 throw;
             }
         }
+
+        //public static void Main(string[] args)
+        //{
+        //    var host = CreateWebHostBuilder(args).Build();
+
+        //    MigrateDatabase(host);
+
+        //    host.Run();
+        //}
+
+        private static void MigrateDatabase(IWebHost host)
+        {
+            using (var scope = host.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<BookDatabaseContext>();
+                db.Database.Migrate();
+            }
+        }
+
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+            WebHost.CreateDefaultBuilder(args)
+                .UseStartup<Startup>();
     }
 }
