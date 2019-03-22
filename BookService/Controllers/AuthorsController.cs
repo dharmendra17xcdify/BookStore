@@ -10,83 +10,83 @@ namespace BookService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BooksController : ControllerBase
+    public class AuthorsController : ControllerBase
     {
         private readonly BookDatabaseContext _context;
 
-        public BooksController(BookDatabaseContext context)
+        public AuthorsController(BookDatabaseContext context)
         {
             _context = context;
         }
 
         /// <summary>
-        /// Get All Books
+        /// Get All authors
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult<IEnumerable<Book>> GetBooks()
+        public ActionResult<IEnumerable<Author>> Getauthors()
         {
-            return _context.Books;
+            return _context.Authors;
         }
 
         /// <summary>
-        /// Get Book By Id
+        /// Get Author By Id
         /// </summary>
-        /// <param name="bookId"></param>
+        /// <param name="authorId"></param>
         /// <returns></returns>
-        [HttpGet("{bookId}")]
-        public async Task<IActionResult> GetBookById([FromRoute] Guid bookId)
+        [HttpGet("{authorId}")]
+        public async Task<IActionResult> GetAuthorById([FromRoute] Guid authorId)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var book = await _context.Books.FindAsync(bookId);
+            var author = await _context.Authors.FindAsync(authorId);
 
-            if (book == null)
+            if (author == null)
             {
                 return NotFound();
             }
 
-            return Ok(book);
+            return Ok(author);
         }
 
         /// <summary>
-        /// Create a New Book
+        /// Create a New Author
         /// </summary>
-        /// <param name="book"></param>
+        /// <param name="author"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> CreateBook([FromBody] Book book)
+        public async Task<IActionResult> CreateAuthor([FromBody] Author author)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            book.BookId = Guid.NewGuid();
-            _context.Books.Add(book);
+            author.AuthorId = Guid.NewGuid();
+            _context.Authors.Add(author);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetBooks", new { bookId = book.BookId }, book);
+            return CreatedAtAction("GetAuthors", new { AuthorId = author.AuthorId }, author);
         }
 
         /// <summary>
-        /// Update Book Info
+        /// Update Author Info
         /// </summary>
-        /// <param name="bookId"></param>
-        /// <param name="book"></param>
+        /// <param name="authorId"></param>
+        /// <param name="author"></param>
         /// <returns></returns>
-        [HttpPut("{bookId}")]
-        public async Task<IActionResult> UpdateBookInfo(Guid bookId, [FromBody] Book book)
+        [HttpPut("{authorId}")]
+        public async Task<IActionResult> UpdateAuthorInfo(Guid authorId, [FromBody] Author author)
         {
-            book.BookId = bookId;
+            author.AuthorId = authorId;
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.Entry(book).State = EntityState.Modified;
+            _context.Entry(author).State = EntityState.Modified;
 
             try
             {
@@ -94,7 +94,7 @@ namespace BookService.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!BookExists(bookId))
+                if (!AuthorExists(authorId))
                 {
                     return NotFound();
                 }
@@ -108,38 +108,38 @@ namespace BookService.Controllers
         }
 
         /// <summary>
-        /// Detete a Book
+        /// Detete a Author
         /// </summary>
-        /// <param name="bookId"></param>
+        /// <param name="authorId"></param>
         /// <returns></returns>
-        [HttpDelete("{bookId}")]
-        public async Task<IActionResult> DeleteBook([FromRoute] Guid bookId)
+        [HttpDelete("{authorId}")]
+        public async Task<IActionResult> DeleteAuthor([FromRoute] Guid authorId)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var book = await _context.Books.FindAsync(bookId);
-            if (book == null)
+            var author = await _context.Authors.FindAsync(authorId);
+            if (author == null)
             {
                 return NotFound();
             }
 
-            _context.Books.Remove(book);
+            _context.Authors.Remove(author);
             await _context.SaveChangesAsync();
 
-            return Ok(book);
+            return Ok(author);
         }
 
         /// <summary>
-        /// Check book exists
+        /// Check author exists
         /// </summary>
-        /// <param name="bookId"></param>
+        /// <param name="authorId"></param>
         /// <returns></returns>
-        private bool BookExists(Guid bookId)
+        private bool AuthorExists(Guid authorId)
         {
-            return _context.Books.Any(e => e.BookId == bookId);
+            return _context.Authors.Any(e => e.AuthorId == authorId);
         }
     }
 }

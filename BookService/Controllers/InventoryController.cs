@@ -10,65 +10,65 @@ namespace BookService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BooksController : ControllerBase
+    public class InventoryController : ControllerBase
     {
         private readonly BookDatabaseContext _context;
 
-        public BooksController(BookDatabaseContext context)
+        public InventoryController(BookDatabaseContext context)
         {
             _context = context;
         }
 
         /// <summary>
-        /// Get All Books
+        /// Get All Inventory
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult<IEnumerable<Book>> GetBooks()
+        public ActionResult<IEnumerable<BookInventory>> GetAllInventory()
         {
-            return _context.Books;
+            return _context.Inventory;
         }
 
         /// <summary>
-        /// Get Book By Id
+        /// Get Inventory By Id
         /// </summary>
-        /// <param name="bookId"></param>
+        /// <param name="inventoryId"></param>
         /// <returns></returns>
-        [HttpGet("{bookId}")]
-        public async Task<IActionResult> GetBookById([FromRoute] Guid bookId)
+        [HttpGet("{inventoryId}")]
+        public async Task<IActionResult> GetInventoryById([FromRoute] Guid inventoryId)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var book = await _context.Books.FindAsync(bookId);
+            var inventory = await _context.Inventory.FindAsync(inventoryId);
 
-            if (book == null)
+            if (inventory == null)
             {
                 return NotFound();
             }
 
-            return Ok(book);
+            return Ok(inventory);
         }
 
         /// <summary>
-        /// Create a New Book
+        /// Create a New Inventory
         /// </summary>
         /// <param name="book"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> CreateBook([FromBody] Book book)
+        public async Task<IActionResult> CreateBook([FromBody] BookInventory inventory)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            book.BookId = Guid.NewGuid();
-            _context.Books.Add(book);
-            await _context.SaveChangesAsync();
+            //book.BookId = Guid.NewGuid();
+            //_context.Books.Add(book);
+            //await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetBooks", new { bookId = book.BookId }, book);
+            return CreatedAtAction("GetBooks", new { inventoryId = inventory.InventoryId }, inventory);
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace BookService.Controllers
                 return BadRequest(ModelState);
             }
 
-            _context.Entry(book).State = EntityState.Modified;
+            //_context.Entry(book).State = EntityState.Modified;
 
             try
             {

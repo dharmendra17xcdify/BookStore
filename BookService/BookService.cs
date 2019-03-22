@@ -49,5 +49,10 @@ namespace BookService
                     }))
             };
         }
+
+        internal static Uri GetBookStoreServiceName(ServiceContext context)
+        {
+            return new Uri($"{context.CodePackageActivationContext.ApplicationName}/BookService");
+        }
     }
 }

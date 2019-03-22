@@ -27,5 +27,7 @@ namespace BookService.Models
 
         [Required, StringLength(255)]
         public string About { get; set; }
+
+        public string Genre { get; set; }
     }
 }

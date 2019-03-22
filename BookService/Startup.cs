@@ -33,6 +33,7 @@ namespace BookService
                 options.UseSqlServer(Configuration.GetConnectionString("BookStore"));
             });
 
+            services.AddScoped<IAuthorData, SqlAuthorData>();
             services.AddScoped<IBookData, SqlBookData>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);

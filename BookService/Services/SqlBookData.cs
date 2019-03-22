@@ -16,6 +16,7 @@ namespace BookService.Services
         {
             this.db = db;
         }
+
         public Book Add(Book newBook)
         {
             db.Add(newBook);
