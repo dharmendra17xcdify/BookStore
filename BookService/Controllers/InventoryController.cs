@@ -55,38 +55,38 @@ namespace BookService.Controllers
         /// <summary>
         /// Create a New Inventory
         /// </summary>
-        /// <param name="book"></param>
+        /// <param name="inventory"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> CreateBook([FromBody] BookInventory inventory)
+        public async Task<IActionResult> CreateInventory([FromBody] BookInventory inventory)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            //book.BookId = Guid.NewGuid();
-            //_context.Books.Add(book);
-            //await _context.SaveChangesAsync();
+            inventory.InventoryId = Guid.NewGuid();
+            _context.Inventory.Add(inventory);
+            await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetBooks", new { inventoryId = inventory.InventoryId }, inventory);
+            return CreatedAtAction("GetAllInventory", new { inventoryId = inventory.InventoryId }, inventory);
         }
 
         /// <summary>
-        /// Update Book Info
+        /// Update Inventory Info
         /// </summary>
-        /// <param name="bookId"></param>
-        /// <param name="book"></param>
+        /// <param name="inventoryId"></param>
+        /// <param name="inventory"></param>
         /// <returns></returns>
-        [HttpPut("{bookId}")]
-        public async Task<IActionResult> UpdateBookInfo(Guid bookId, [FromBody] Book book)
+        [HttpPut("{inventoryId}")]
+        public async Task<IActionResult> UpdateInventoryInfo(Guid inventoryId, [FromBody] BookInventory inventory)
         {
-            book.BookId = bookId;
+            inventory.InventoryId = inventoryId;
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            //_context.Entry(book).State = EntityState.Modified;
+            _context.Entry(inventory).State = EntityState.Modified;
 
             try
             {
@@ -94,7 +94,7 @@ namespace BookService.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!BookExists(bookId))
+                if (!InventoryExists(inventoryId))
                 {
                     return NotFound();
                 }
@@ -108,38 +108,38 @@ namespace BookService.Controllers
         }
 
         /// <summary>
-        /// Detete a Book
+        /// Detete a Inventory
         /// </summary>
-        /// <param name="bookId"></param>
+        /// <param name="inventoryId"></param>
         /// <returns></returns>
-        [HttpDelete("{bookId}")]
-        public async Task<IActionResult> DeleteBook([FromRoute] Guid bookId)
+        [HttpDelete("{inventoryId}")]
+        public async Task<IActionResult> DeleteInventory([FromRoute] Guid inventoryId)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var book = await _context.Books.FindAsync(bookId);
-            if (book == null)
+            var inventory = await _context.Inventory.FindAsync(inventoryId);
+            if (inventory == null)
             {
                 return NotFound();
             }
 
-            _context.Books.Remove(book);
+            _context.Inventory.Remove(inventory);
             await _context.SaveChangesAsync();
 
-            return Ok(book);
+            return Ok(inventory);
         }
 
         /// <summary>
-        /// Check book exists
+        /// Check Inventory exists
         /// </summary>
-        /// <param name="bookId"></param>
+        /// <param name="inventoryId"></param>
         /// <returns></returns>
-        private bool BookExists(Guid bookId)
+        private bool InventoryExists(Guid inventoryId)
         {
-            return _context.Books.Any(e => e.BookId == bookId);
+            return _context.Inventory.Any(e => e.InventoryId == inventoryId);
         }
     }
 }
