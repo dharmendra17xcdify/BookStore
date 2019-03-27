@@ -20,5 +20,11 @@ namespace BookService.Models
         [Required, StringLength(255)]
         public string AboutAuther { get; set; }
 
+        [Required, StringLength(255)]
+        public string Awards { get; set; }
+
+        [Required, StringLength(255)]
+        public string Books { get; set; }
+
     }
 }

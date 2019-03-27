@@ -1,4 +1,5 @@
 ﻿using BookService.Models;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -57,6 +58,7 @@ namespace BookService.Controllers
         /// </summary>
         /// <param name="author"></param>
         /// <returns></returns>
+        [EnableCors("MyPolicy")]
         [HttpPost]
         public async Task<IActionResult> CreateAuthor([FromBody] Author author)
         {
@@ -67,7 +69,7 @@ namespace BookService.Controllers
             author.AuthorId = Guid.NewGuid();
             _context.Authors.Add(author);
             await _context.SaveChangesAsync();
-
+            
             return CreatedAtAction("GetAuthors", new { AuthorId = author.AuthorId }, author);
         }
 
@@ -77,6 +79,7 @@ namespace BookService.Controllers
         /// <param name="authorId"></param>
         /// <param name="author"></param>
         /// <returns></returns>
+        [EnableCors("MyPolicy")]
         [HttpPut("{authorId}")]
         public async Task<IActionResult> UpdateAuthorInfo(Guid authorId, [FromBody] Author author)
         {
